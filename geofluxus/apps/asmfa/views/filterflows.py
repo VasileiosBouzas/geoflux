@@ -157,12 +157,8 @@ class FilterFlowViewSet(PostGetViewMixin,
         for node in nodes:
             area_ids = filter[node].pop('selectedAreas', [])
             if area_ids:
-                area = Area.objects.filter(id__in=area_ids)\
-                                   .aggregate(area=Union('geom'))['area']
-
-                # check where with respect to the area
                 inOrOut = filter[node].pop('inOrOut', 'in')
-                kwargs = {node + '__geom__within': area}
+                kwargs = {node + '__area__in': area_ids}
                 if inOrOut == 'in':
                     queryset = queryset.filter(**kwargs)
                 else:
